@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   XboxController controller;
   DifferentialDrive drivetrain;
   WPI_VictorSPX climber0;
+  WPI_VictorSPX climber1;
   
 
   @Override
@@ -43,6 +44,7 @@ public class Robot extends TimedRobot {
       new SpeedControllerGroup(new WPI_VictorSPX(2), new WPI_VictorSPX(1))
     );
     climber0 = new WPI_VictorSPX(3);
+    climber1 = new WPI_VictorSPX(5);
 
   }
 
@@ -105,7 +107,14 @@ public class Robot extends TimedRobot {
     double ySpeed = controller.getY(Hand.kLeft);
     drivetrain.arcadeDrive(ySpeed * Math.abs(ySpeed), joystickToSpeed(xSpeed), false);
     climber0.set(controller.getY(Hand.kRight));
-  }
+    if(controller.getTriggerAxis(Hand.kLeft) > 0.2) {
+      climber1.set(controller.getTriggerAxis(Hand.kLeft) * 0.75);
+    } else if (controller.getTriggerAxis(Hand.kRight) > 0.2) {
+    climber1.set(-controller.getTriggerAxis(Hand.kRight) * 0.75);
+  } else {
+      climber1.set(0.0);
+    }
+}
 
   /**
    * This function is called periodically during test mode.
